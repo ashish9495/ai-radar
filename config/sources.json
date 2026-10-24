@@ -1,0 +1,379 @@
+[
+ {
+  "id": "openai-news",
+  "name": "OpenAI News",
+  "adapter": "rss",
+  "config": {
+   "url": "https://openai.com/news/rss.xml"
+  },
+  "reliability": 5,
+  "is_official": true,
+  "interval_minutes": 30,
+  "default_category": "models",
+  "homepage": "https://openai.com/news",
+  "notes": null,
+  "enabled": true
+ },
+ {
+  "id": "google-ai-blog",
+  "name": "Google AI Blog",
+  "adapter": "rss",
+  "config": {
+   "url": "https://blog.google/technology/ai/rss/"
+  },
+  "reliability": 5,
+  "is_official": true,
+  "interval_minutes": 30,
+  "default_category": "models",
+  "homepage": "https://blog.google/technology/ai/",
+  "notes": null,
+  "enabled": true
+ },
+ {
+  "id": "deepmind-blog",
+  "name": "Google DeepMind Blog",
+  "adapter": "rss",
+  "config": {
+   "url": "https://deepmind.google/blog/rss.xml"
+  },
+  "reliability": 5,
+  "is_official": true,
+  "interval_minutes": 60,
+  "default_category": "models",
+  "homepage": "https://deepmind.google/discover/blog/",
+  "notes": null,
+  "enabled": true
+ },
+ {
+  "id": "hf-blog",
+  "name": "Hugging Face Blog",
+  "adapter": "rss",
+  "config": {
+   "url": "https://huggingface.co/blog/feed.xml"
+  },
+  "reliability": 4,
+  "is_official": true,
+  "interval_minutes": 60,
+  "default_category": "open-source",
+  "homepage": "https://huggingface.co/blog",
+  "notes": null,
+  "enabled": true
+ },
+ {
+  "id": "ms-ai-blog",
+  "name": "Microsoft AI Blog",
+  "adapter": "rss",
+  "config": {
+   "url": "https://blogs.microsoft.com/ai/feed/"
+  },
+  "reliability": 5,
+  "is_official": true,
+  "interval_minutes": 60,
+  "default_category": "daily-tools",
+  "homepage": "https://blogs.microsoft.com/ai/",
+  "notes": null,
+  "enabled": true
+ },
+ {
+  "id": "aws-ml-blog",
+  "name": "AWS Machine Learning Blog",
+  "adapter": "rss",
+  "config": {
+   "url": "https://aws.amazon.com/blogs/machine-learning/feed/"
+  },
+  "reliability": 4,
+  "is_official": true,
+  "interval_minutes": 60,
+  "default_category": "coding",
+  "homepage": "https://aws.amazon.com/blogs/machine-learning/",
+  "notes": null,
+  "enabled": true
+ },
+ {
+  "id": "nvidia-blog",
+  "name": "NVIDIA Blog",
+  "adapter": "rss",
+  "config": {
+   "url": "https://blogs.nvidia.com/feed/",
+   "keyword_filter": true
+  },
+  "reliability": 4,
+  "is_official": true,
+  "interval_minutes": 60,
+  "default_category": "industry",
+  "homepage": "https://blogs.nvidia.com/",
+  "notes": null,
+  "enabled": true
+ },
+ {
+  "id": "m365-roadmap",
+  "name": "Microsoft 365 Roadmap",
+  "adapter": "rss",
+  "config": {
+   "url": "https://www.microsoft.com/releasecommunications/api/v2/m365/rss",
+   "max_items": 40,
+   "keyword_filter": true
+  },
+  "reliability": 5,
+  "is_official": true,
+  "interval_minutes": 120,
+  "default_category": "it-support",
+  "homepage": "https://www.microsoft.com/microsoft-365/roadmap",
+  "notes": "High volume; filtered to AI/automation items",
+  "enabled": true
+ },
+ {
+  "id": "simonwillison",
+  "name": "Simon Willison's Weblog",
+  "adapter": "rss",
+  "config": {
+   "url": "https://simonwillison.net/atom/everything/"
+  },
+  "reliability": 4,
+  "is_official": false,
+  "interval_minutes": 60,
+  "default_category": "coding",
+  "homepage": "https://simonwillison.net/",
+  "notes": "Independent practitioner",
+  "enabled": true
+ },
+ {
+  "id": "verge-ai",
+  "name": "The Verge — AI",
+  "adapter": "rss",
+  "config": {
+   "url": "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"
+  },
+  "reliability": 3,
+  "is_official": false,
+  "interval_minutes": 60,
+  "default_category": "industry",
+  "homepage": "https://www.theverge.com/ai-artificial-intelligence",
+  "notes": null,
+  "enabled": true
+ },
+ {
+  "id": "techcrunch-ai",
+  "name": "TechCrunch — AI",
+  "adapter": "rss",
+  "config": {
+   "url": "https://techcrunch.com/category/artificial-intelligence/feed/"
+  },
+  "reliability": 3,
+  "is_official": false,
+  "interval_minutes": 60,
+  "default_category": "industry",
+  "homepage": "https://techcrunch.com/category/artificial-intelligence/",
+  "notes": null,
+  "enabled": true
+ },
+ {
+  "id": "bleepingcomputer",
+  "name": "BleepingComputer",
+  "adapter": "rss",
+  "config": {
+   "url": "https://www.bleepingcomputer.com/feed/",
+   "keyword_filter": true
+  },
+  "reliability": 4,
+  "is_official": false,
+  "interval_minutes": 60,
+  "default_category": "security",
+  "homepage": "https://www.bleepingcomputer.com/",
+  "notes": "IT/security news; filtered to AI/automation items",
+  "enabled": true
+ },
+ {
+  "id": "producthunt",
+  "name": "Product Hunt",
+  "adapter": "rss",
+  "config": {
+   "url": "https://www.producthunt.com/feed",
+   "keyword_filter": true
+  },
+  "reliability": 2,
+  "is_official": false,
+  "interval_minutes": 120,
+  "default_category": "daily-tools",
+  "homepage": "https://www.producthunt.com/",
+  "notes": "Launch claims are self-reported",
+  "enabled": true
+ },
+ {
+  "id": "arxiv-ai",
+  "name": "arXiv (cs.AI/CL/LG/MA)",
+  "adapter": "arxiv",
+  "config": {
+   "query": "cat:cs.AI OR cat:cs.CL OR cat:cs.LG OR cat:cs.MA",
+   "max_results": 40
+  },
+  "reliability": 4,
+  "is_official": false,
+  "interval_minutes": 180,
+  "default_category": "models",
+  "homepage": "https://arxiv.org/",
+  "notes": "Preprints are not peer reviewed",
+  "enabled": true
+ },
+ {
+  "id": "hn-ai",
+  "name": "Hacker News (AI)",
+  "adapter": "hackernews",
+  "config": {
+   "queries": [
+    "LLM",
+    "AI agent",
+    "MCP",
+    "open source model",
+    "Claude",
+    "GPT",
+    "Gemini",
+    "Ollama"
+   ],
+   "min_points": 40,
+   "hours": 24
+  },
+  "reliability": 3,
+  "is_official": false,
+  "interval_minutes": 30,
+  "default_category": "coding",
+  "homepage": "https://news.ycombinator.com/",
+  "notes": "Via the public Algolia HN Search API",
+  "enabled": true
+ },
+ {
+  "id": "reddit-localllama",
+  "name": "r/LocalLLaMA",
+  "adapter": "reddit",
+  "config": {
+   "subreddit": "LocalLLaMA",
+   "listing": "top",
+   "t": "day",
+   "limit": 25
+  },
+  "reliability": 2,
+  "is_official": false,
+  "interval_minutes": 60,
+  "default_category": "open-source",
+  "homepage": "https://www.reddit.com/r/LocalLLaMA/",
+  "notes": "Reddit often blocks unauthenticated cloud IPs; set REDDIT_CLIENT_ID/SECRET",
+  "enabled": true
+ },
+ {
+  "id": "reddit-sysadmin",
+  "name": "r/sysadmin",
+  "adapter": "reddit",
+  "config": {
+   "subreddit": "sysadmin",
+   "listing": "top",
+   "t": "day",
+   "limit": 25,
+   "keyword_filter": true
+  },
+  "reliability": 2,
+  "is_official": false,
+  "interval_minutes": 60,
+  "default_category": "it-support",
+  "homepage": "https://www.reddit.com/r/sysadmin/",
+  "notes": "Filtered to AI/automation-related posts",
+  "enabled": true
+ },
+ {
+  "id": "gh-releases",
+  "name": "GitHub releases (watchlist)",
+  "adapter": "github_releases",
+  "config": {
+   "repos": [
+    "ollama/ollama",
+    "open-webui/open-webui",
+    "ggml-org/llama.cpp",
+    "vllm-project/vllm",
+    "huggingface/transformers",
+    "langchain-ai/langchain",
+    "n8n-io/n8n",
+    "browser-use/browser-use",
+    "cline/cline",
+    "continuedev/continue",
+    "anthropics/claude-code",
+    "openai/codex",
+    "modelcontextprotocol/python-sdk",
+    "modelcontextprotocol/typescript-sdk",
+    "crewAIInc/crewAI",
+    "microsoft/autogen"
+   ],
+   "per_repo": 2
+  },
+  "reliability": 4,
+  "is_official": true,
+  "interval_minutes": 30,
+  "default_category": "open-source",
+  "homepage": "https://github.com/",
+  "notes": null,
+  "enabled": true
+ },
+ {
+  "id": "gh-new-ai-repos",
+  "name": "GitHub — rising AI repos",
+  "adapter": "github_search",
+  "config": {
+   "queries": [
+    "topic:llm",
+    "topic:ai-agents",
+    "topic:mcp",
+    "topic:mcp-server",
+    "topic:self-hosted topic:ai"
+   ],
+   "created_within_days": 30,
+   "min_stars": 80,
+   "per_query": 10
+  },
+  "reliability": 2,
+  "is_official": false,
+  "interval_minutes": 180,
+  "default_category": "open-source",
+  "homepage": "https://github.com/search",
+  "notes": "Stars are not a reliability signal",
+  "enabled": true
+ },
+ {
+  "id": "hf-trending",
+  "name": "Hugging Face trending models",
+  "adapter": "huggingface",
+  "config": {
+   "kind": "models",
+   "sort": "trendingScore",
+   "limit": 25
+  },
+  "reliability": 3,
+  "is_official": false,
+  "interval_minutes": 180,
+  "default_category": "models",
+  "homepage": "https://huggingface.co/models",
+  "notes": null,
+  "enabled": true
+ },
+ {
+  "id": "web-search",
+  "name": "Web search (configurable)",
+  "adapter": "web_search",
+  "config": {
+   "queries": [
+    "new AI tool launch",
+    "MCP server released",
+    "AI for IT helpdesk",
+    "open source AI agent release",
+    "Anthropic announcement",
+    "AI model API pricing change"
+   ],
+   "freshness_days": 2,
+   "per_query": 8
+  },
+  "reliability": 2,
+  "is_official": false,
+  "interval_minutes": 180,
+  "default_category": null,
+  "homepage": null,
+  "notes": "Requires SEARCH_PROVIDER + SEARCH_API_KEY",
+  "enabled": false
+ }
+]

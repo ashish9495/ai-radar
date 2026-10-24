@@ -1,0 +1,205 @@
+[
+ {
+  "slug": "daily-tools",
+  "name": "Everyday AI tools",
+  "priority": 1,
+  "keywords": [
+   "assistant",
+   "chatbot",
+   "productivity",
+   "extension",
+   "app",
+   "launch",
+   "ai tool",
+   "copilot"
+  ],
+  "description": "Tools usable day to day"
+ },
+ {
+  "slug": "it-support",
+  "name": "IT support & ITSM",
+  "priority": 2,
+  "keywords": [
+   "it support",
+   "helpdesk",
+   "desktop support",
+   "servicenow",
+   "itsm",
+   "intune",
+   "active directory",
+   "entra",
+   "windows",
+   "networking",
+   "sysadmin",
+   "microsoft 365",
+   "o365",
+   "powershell",
+   "jamf",
+   "ticket"
+  ],
+  "description": "Desktop support, networking, sysadmin, ITSM"
+ },
+ {
+  "slug": "coding",
+  "name": "AI coding & development",
+  "priority": 3,
+  "keywords": [
+   "coding",
+   "code assistant",
+   "ide",
+   "python",
+   "api",
+   "sdk",
+   "developer",
+   "copilot",
+   "cursor",
+   "claude code",
+   "codex",
+   "programming",
+   "typescript"
+  ],
+  "description": "Coding assistants and app building"
+ },
+ {
+  "slug": "agents",
+  "name": "Agents, MCP & automation",
+  "priority": 4,
+  "keywords": [
+   "agent",
+   "agents",
+   "agentic",
+   "mcp",
+   "model context protocol",
+   "browser automation",
+   "computer use",
+   "workflow",
+   "n8n",
+   "zapier",
+   "automation",
+   "rpa"
+  ],
+  "description": "Agents, MCP servers, automation"
+ },
+ {
+  "slug": "security",
+  "name": "AI & IT security",
+  "priority": 4,
+  "keywords": [
+   "vulnerability",
+   "cve",
+   "security",
+   "phishing",
+   "malware",
+   "ransomware",
+   "prompt injection",
+   "breach",
+   "patch"
+  ],
+  "description": "Security relevant to IT work"
+ },
+ {
+  "slug": "career",
+  "name": "Career & job search",
+  "priority": 5,
+  "keywords": [
+   "resume",
+   "interview",
+   "job search",
+   "career",
+   "hiring",
+   "linkedin",
+   "cover letter",
+   "upskilling",
+   "certification"
+  ],
+  "description": "Career development"
+ },
+ {
+  "slug": "productivity",
+  "name": "Research & productivity",
+  "priority": 6,
+  "keywords": [
+   "research",
+   "notes",
+   "data analysis",
+   "spreadsheet",
+   "excel",
+   "summarize",
+   "search",
+   "deep research",
+   "transcription"
+  ],
+  "description": "Research, productivity, data"
+ },
+ {
+  "slug": "open-source",
+  "name": "Open source & self-hosted",
+  "priority": 7,
+  "keywords": [
+   "open source",
+   "open-source",
+   "self-hosted",
+   "selfhosted",
+   "local",
+   "ollama",
+   "llama.cpp",
+   "gguf",
+   "docker"
+  ],
+  "description": "OSS, self-hosted, free alternatives"
+ },
+ {
+  "slug": "models",
+  "name": "Models & research",
+  "priority": 8,
+  "keywords": [
+   "model",
+   "llm",
+   "benchmark",
+   "paper",
+   "arxiv",
+   "weights",
+   "release",
+   "reasoning",
+   "multimodal",
+   "context window",
+   "fine-tuning",
+   "deprecation",
+   "pricing"
+  ],
+  "description": "Model releases and research"
+ },
+ {
+  "slug": "industry",
+  "name": "Industry news",
+  "priority": 8,
+  "keywords": [
+   "funding",
+   "acquisition",
+   "regulation",
+   "policy",
+   "lawsuit",
+   "partnership",
+   "ipo"
+  ],
+  "description": "Major industry developments"
+ },
+ {
+  "slug": "creative",
+  "name": "Creative AI & frontier tech",
+  "priority": 9,
+  "keywords": [
+   "image",
+   "video",
+   "audio",
+   "music",
+   "diffusion",
+   "robotics",
+   "science",
+   "3d",
+   "voice",
+   "speech"
+  ],
+  "description": "Creative AI, robotics, science"
+ }
+]

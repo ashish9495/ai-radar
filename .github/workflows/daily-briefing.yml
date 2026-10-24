@@ -1,0 +1,30 @@
+name: Daily briefing
+# 02:27 UTC ≈ 07:57 Asia/Kolkata (just before the :00 rush, when GitHub delays are worst).
+on:
+  schedule: [{ cron: "27 2 * * *" }]
+  workflow_dispatch:
+permissions: { contents: read }
+concurrency: { group: briefing, cancel-in-progress: false }
+
+jobs:
+  briefing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      LLM_PROVIDER: ${{ vars.LLM_PROVIDER }}
+      LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
+      LLM_MODEL_FAST: ${{ vars.LLM_MODEL_FAST }}
+      LLM_MODEL_STRONG: ${{ vars.LLM_MODEL_STRONG }}
+      LLM_PRICE_INPUT_PER_M: ${{ vars.LLM_PRICE_INPUT_PER_M }}
+      LLM_PRICE_OUTPUT_PER_M: ${{ vars.LLM_PRICE_OUTPUT_PER_M }}
+      DAILY_BUDGET_USD: ${{ vars.DAILY_BUDGET_USD }}
+      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with: { python-version: "3.12", cache: pip, cache-dependency-path: pipeline/pyproject.toml }
+      - run: pip install ./pipeline
+      - working-directory: pipeline
+        run: python -m airadar.briefing

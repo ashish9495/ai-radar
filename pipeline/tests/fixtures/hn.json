@@ -1,0 +1,5 @@
+{"hits":[
+{"objectID":"41000001","title":"Show HN: Open-source MCP server for ServiceNow tickets","url":"https://github.com/example/servicenow-mcp","points":120,"num_comments":45,"author":"dev1","created_at":"2026-10-24T03:00:00Z"},
+{"objectID":"41000002","title":"Introducing a new reasoning model for developers","url":"https://openai.com/index/new-reasoning-model/","points":800,"num_comments":400,"author":"dev2","created_at":"2026-10-23T18:00:00Z"},
+{"objectID":"41000003","title":"Ask HN: How do you use AI agents in helpdesk work?","url":null,"story_text":"Curious how people use agents for L1 support.","points":60,"num_comments":80,"author":"dev3","created_at":"2026-10-24T01:00:00Z"}
+]}

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>arXiv</title>
+<entry><id>http://arxiv.org/abs/2610.12345v1</id><updated>2026-10-23T12:00:00Z</updated><published>2026-10-23T12:00:00Z</published>
+<title>Agentic Benchmarks for IT Helpdesk Automation</title><summary>We propose a benchmark for agents resolving IT tickets. Results are self-reported.</summary>
+<author><name>A. Researcher</name></author><link href="http://arxiv.org/abs/2610.12345v1" rel="alternate" type="text/html"/>
+<category term="cs.AI"/></entry></feed>
