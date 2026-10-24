@@ -1,6 +1,8 @@
 """RSS / Atom feeds (official blogs, release notes, press)."""
 from __future__ import annotations
 
+import re
+
 import feedparser
 
 from ..models import RawItem, Source
@@ -15,6 +17,7 @@ def fetch(source: Source, ctx: Context) -> list[RawItem]:
     if feed.bozo and not feed.entries:
         raise ValueError(f"unparseable feed: {type(feed.bozo_exception).__name__}")
     limit = int(source.config.get("max_items", 30))
+    type_hint = source.config.get("discovery_type")
     items: list[RawItem] = []
     for entry in feed.entries[:limit]:
         link = entry.get("link") or ""
@@ -34,6 +37,25 @@ def fetch(source: Source, ctx: Context) -> list[RawItem]:
             updated_at_source=parse_datetime((entry["updated_parsed"] if "updated_parsed" in entry else None) or entry.get("updated")),
             external_id=entry.get("id") or entry.get("guid"),
             author=entry.get("author"),
-            extra={"feed_tags": [t.get("term") for t in entry.get("tags", []) if t.get("term")][:10]},
+            discovery_type=type_hint,
+            extra={"feed_tags": [t.get("term") for t in entry.get("tags", []) if t.get("term")][:10],
+                   **_links(body, link)},
         ))
     return items
+
+
+_A_RE = re.compile(r'<a[^>]+href="([^"]+)"[^>]*>\s*([^<]{1,40})\s*</a>', re.I)
+
+
+def _links(html: str, page_url: str) -> dict:
+    """Product-launch feeds (e.g. Product Hunt) put 'Discussion' and 'Link' anchors in the entry body.
+    Keep them as references: the product's own site and the launch discussion page."""
+    out: dict = {}
+    for href, label in _A_RE.findall(html or ""):
+        href = href.replace("&amp;", "&")
+        label = label.strip().lower()
+        if label == "link" and href.startswith("http"):
+            out["official_url"] = href
+        elif label == "discussion" and href.startswith("http"):
+            out["discussion_url"] = href
+    return out

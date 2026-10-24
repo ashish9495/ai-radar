@@ -138,5 +138,7 @@ export interface Briefing {
   created_at: string;
 }
 
+export interface Reference { label: string; url: string; kind: "official" | "discussion" | "source" }
+
 export interface Category { slug: string; name: string; priority: number; enabled: boolean }
 export interface Note { id: string; body: string; created_at: string }

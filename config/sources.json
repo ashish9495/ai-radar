@@ -185,19 +185,21 @@
   "enabled": true
  },
  {
-  "id": "producthunt",
-  "name": "Product Hunt",
+  "id": "producthunt-ai",
+  "name": "Product Hunt — AI launches",
   "adapter": "rss",
   "config": {
-   "url": "https://www.producthunt.com/feed",
-   "keyword_filter": true
+   "url": "https://www.producthunt.com/feed?category=artificial-intelligence",
+   "discovery_type": "tool",
+   "max_age_days": 7,
+   "max_items": 50
   },
   "reliability": 2,
   "is_official": false,
-  "interval_minutes": 30,
+  "interval_minutes": 15,
   "default_category": "daily-tools",
-  "homepage": "https://www.producthunt.com/",
-  "notes": "Launch claims are self-reported",
+  "homepage": "https://www.producthunt.com/categories/ai",
+  "notes": "New AI product launches; feature claims are self-reported by makers",
   "enabled": true
  },
  {
@@ -241,6 +243,34 @@
   "default_category": "coding",
   "homepage": "https://news.ycombinator.com/",
   "notes": "Via the public Algolia HN Search API",
+  "enabled": true
+ },
+ {
+  "id": "hn-show-ai",
+  "name": "Show HN — new AI tools",
+  "adapter": "hackernews",
+  "config": {
+   "tags": "show_hn",
+   "queries": [
+    "AI",
+    "LLM",
+    "agent",
+    "GPT",
+    "Claude",
+    "MCP",
+    "local model"
+   ],
+   "min_points": 3,
+   "hours": 48,
+   "discovery_type": "tool",
+   "max_age_days": 7
+  },
+  "reliability": 2,
+  "is_official": false,
+  "interval_minutes": 15,
+  "default_category": "daily-tools",
+  "homepage": "https://news.ycombinator.com/show",
+  "notes": "Makers launching their own tools; early-stage, unverified",
   "enabled": true
  },
  {

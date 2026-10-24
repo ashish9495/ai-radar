@@ -1,11 +1,11 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { searchDiscoveries, setBookmark } from "@/lib/api";
+import { getReferences, searchDiscoveries, setBookmark } from "@/lib/api";
 import { IMPORTANCE, PRICING_LABEL, TYPE_LABEL, VERIFICATION, formatIST, hostname, isOldNews, timeAgo } from "@/lib/format";
 import { useAsync } from "@/lib/hooks";
 import { useLive } from "./live";
-import type { BookmarkStatus, DiscoveryRow, SearchParams } from "@/lib/types";
+import type { BookmarkStatus, DiscoveryRow, Reference, SearchParams } from "@/lib/types";
 import { Badge, Empty, ErrorBox, ExtLink, Pager, Skeleton } from "./ui";
 
 export function BookmarkButtons({ id, status, onChange }: { id: string; status: BookmarkStatus | null; onChange?: (s: BookmarkStatus | null) => void }) {
@@ -33,7 +33,7 @@ export function BookmarkButtons({ id, status, onChange }: { id: string; status: 
   );
 }
 
-export function DiscoveryCard({ d, compact = false }: { d: DiscoveryRow; compact?: boolean }) {
+export function DiscoveryCard({ d, compact = false, refs = [] }: { d: DiscoveryRow; compact?: boolean; refs?: Reference[] }) {
   const imp = IMPORTANCE[d.importance];
   const ver = VERIFICATION[d.verification_status];
   const old = isOldNews(d.published_at, d.first_discovered_at);
@@ -64,8 +64,16 @@ export function DiscoveryCard({ d, compact = false }: { d: DiscoveryRow; compact
       {!compact && d.tags.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-1">{d.tags.slice(0, 8).map((t) => <span key={t} className="tag">#{t}</span>)}</div>
       )}
+      {refs.length > 0 && (
+        <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+          <span className="text-muted">References:</span>
+          {refs.slice(0, 5).map((r) => (
+            <ExtLink key={r.url} href={r.url} className={r.kind === "official" ? "font-medium" : ""}>{r.label} ↗</ExtLink>
+          ))}
+        </p>
+      )}
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-line/60 pt-3">
-        <ExtLink href={d.canonical_url} className="text-xs">Original source · {hostname(d.canonical_url)} ↗</ExtLink>
+        <ExtLink href={d.canonical_url} className="text-xs">Open · {hostname(d.canonical_url)} ↗</ExtLink>
         <BookmarkButtons id={d.id} status={d.bookmark_status} />
       </div>
     </article>
@@ -81,13 +89,15 @@ export function DiscoveryFeed({ params, empty, pageSize = 20, compact = false, g
   if (key !== lastKey) { setLastKey(key); setOffset(0); }
   const { tick } = useLive();
   const { data, error, loading, reload } = useAsync(() => searchDiscoveries({ ...params, limit: pageSize, offset }), [key, offset, pageSize, tick]);
+  const ids = (data ?? []).map((d) => d.id).join(",");
+  const refs = useAsync(() => getReferences(ids ? ids.split(",") : []), [ids]);
   if (error) return <ErrorBox error={error} onRetry={reload} />;
   if (loading && !data) return <Skeleton rows={3} />;
   if (!data?.length) return <Empty>{empty ?? "Nothing here yet. New items appear after the next collection run."}</Empty>;
   return (
     <div className={loading ? "opacity-60 transition-opacity" : ""}>
       <div className={grid ? "grid gap-3 lg:grid-cols-2" : "space-y-3"}>
-        {data.map((d) => <DiscoveryCard key={d.id} d={d} compact={compact} />)}
+        {data.map((d) => <DiscoveryCard key={d.id} d={d} compact={compact} refs={refs.data?.[d.id]} />)}
       </div>
       <Pager offset={offset} limit={pageSize} total={Number(data[0]?.total_count ?? 0)} onChange={setOffset} />
     </div>

@@ -111,7 +111,7 @@ def collect_source(source: Source, ctx: Context, store: Store, index: DedupeInde
                 newest_pub = item.published_at
             match = index.match(row["url_hash"], row["content_hash"], row["normalized_title"], row["canonical_url"])
             raw_meta = {"external_title": item.title, "points": item.score, "comments": item.comments,
-                        "discussion_url": item.extra.get("discussion_url")}
+                        "discussion_url": item.extra.get("discussion_url"), "official_url": item.extra.get("official_url")}
             if match:
                 stats["items_duplicate"] += 1
                 store.add_sighting(match.discovery_id, source.id, item.url, item.external_id,

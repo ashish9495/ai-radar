@@ -2,7 +2,7 @@ import { DEMO_DISCOVERIES, DEMO_RUNS, DEMO_SOURCES, DEMO_STATUS, demoSearch } fr
 import { IS_DEMO, supabase } from "./supabase";
 import type {
   BookmarkStatus, Briefing, Category, DiscoveryDetail, DiscoveryRow, Note, PipelineStatus, PracticalWorkflow,
-  SearchParams, SourceWithHealth, WorkflowRun,
+  Reference, SearchParams, SourceWithHealth, WorkflowRun,
 } from "./types";
 
 function unwrap<T>(res: { data: T | null; error: { message: string } | null }): T {
@@ -176,4 +176,24 @@ export async function addNote(discoveryId: string, body: string): Promise<void> 
 export async function deleteNote(id: string): Promise<void> {
   if (IS_DEMO) return;
   unwrap(await supabase().from("user_notes").delete().eq("id", id).select("id"));
+}
+
+/** Reference links for a page of discoveries in ONE query: each source's link, plus the product's own site
+ * and the discussion thread when the source provided them (Product Hunt, Hacker News, Reddit). */
+export async function getReferences(ids: string[]): Promise<Record<string, Reference[]>> {
+  if (IS_DEMO || !ids.length) return {};
+  const rows = unwrap(await supabase().from("discovery_sources")
+    .select("discovery_id,source_url,raw_meta,sources(name)").in("discovery_id", ids.slice(0, 100))) as unknown as
+    { discovery_id: string; source_url: string; raw_meta: Record<string, string | null> | null; sources: { name: string } | null }[];
+  const out: Record<string, Reference[]> = {};
+  for (const r of rows) {
+    const list = (out[r.discovery_id] ??= []);
+    const push = (ref: Reference) => { if (!list.some((x) => x.url === ref.url)) list.push(ref); };
+    const m = r.raw_meta ?? {};
+    if (m.official_url) push({ label: "Official site", url: m.official_url, kind: "official" });
+    if (m.discussion_url && m.discussion_url !== r.source_url) push({ label: `${r.sources?.name ?? "Source"} discussion`, url: m.discussion_url, kind: "discussion" });
+    push({ label: r.sources?.name ?? "Source", url: r.source_url, kind: "source" });
+  }
+  for (const k of Object.keys(out)) out[k].sort((a, b) => ["official", "discussion", "source"].indexOf(a.kind) - ["official", "discussion", "source"].indexOf(b.kind));
+  return out;
 }

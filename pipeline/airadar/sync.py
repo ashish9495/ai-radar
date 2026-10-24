@@ -68,8 +68,11 @@ def main() -> int:
             st._post("/sources", s, prefer="return=minimal")
             st.upsert_health(s["id"], {"status": "unknown" if s.get("enabled", True) else "disabled"})
     removed = existing - {s["id"] for s in sources}
+    for rid in sorted(removed):  # retired sources are disabled, never deleted (their history stays)
+        st._patch("/sources", {"enabled": False, "notes": "Retired: removed from config/sources.json"}, id=f"eq.{rid}")
+        st.upsert_health(rid, {"status": "disabled"})
     if removed:
-        log.warning("sources in DB but not in config (left untouched, disable them in Settings): %s", sorted(removed))
+        log.info("disabled retired sources: %s", sorted(removed))
     log.info("synced %d categories and %d sources", len(categories), len(sources))
     return 0
 

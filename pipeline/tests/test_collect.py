@@ -98,3 +98,24 @@ def test_old_backlog_items_are_skipped(store, config, router, http):
     assert "Fresh article about AI agents today" in titles
     assert "An article from months ago about AI agents" not in titles
     assert result["items_too_old"] == 1
+
+
+def test_product_hunt_links_and_show_hn_tools(store, config, router, http, sources):
+    from airadar.models import Source
+    ph = b'''<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title>PH</title>
+<entry><id>tag:ph,2005:Post/1</id><published>''' + datetime.now(timezone.utc).isoformat().encode() + b'''</published>
+<link rel="alternate" type="text/html" href="https://www.producthunt.com/products/agentx"/><title>AgentX</title>
+<content type="html">&lt;p&gt;AI agent for helpdesk tickets&lt;/p&gt;&lt;p&gt;&lt;a href="https://www.producthunt.com/products/agentx?utm_campaign=x"&gt;Discussion&lt;/a&gt; | &lt;a href="https://www.producthunt.com/r/p/1?app_id=339"&gt;Link&lt;/a&gt;&lt;/p&gt;</content></entry></feed>'''
+    router.routes.insert(0, ("producthunt.com/feed", 200, ph, {}))
+    store.sources += [
+        Source("producthunt-ai", "PH AI", "rss", {"url": "https://www.producthunt.com/feed?category=artificial-intelligence", "discovery_type": "tool"}, 2, False, True, 15, "daily-tools"),
+        Source("hn-show-ai", "Show HN AI", "hackernews", {"tags": "show_hn", "queries": ["AI"], "min_points": 1, "discovery_type": "tool"}, 2, False, True, 15, "daily-tools"),
+    ]
+    collect.run(store, config, http, only=["producthunt-ai", "hn-show-ai"], force=True)
+    agentx = next(d for d in store.discoveries.values() if d["title"] == "AgentX")
+    assert agentx["discovery_type"] == "tool"
+    meta = next(s["raw_meta"] for s in store.sightings if s["discovery_id"] == agentx["id"])
+    assert meta["official_url"] == "https://www.producthunt.com/r/p/1?app_id=339"
+    assert meta["discussion_url"].startswith("https://www.producthunt.com/products/agentx")
+    shown = [d for d in store.discoveries.values() if "ServiceNow" in d["title"]]
+    assert shown and not shown[0]["title"].lower().startswith("show hn") and shown[0]["discovery_type"] == "tool"
