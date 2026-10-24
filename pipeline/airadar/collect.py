@@ -73,6 +73,14 @@ def to_row(item: RawItem, source: Source) -> dict:
     }
 
 
+INGESTION_COLUMNS = ("items_fetched", "items_new", "items_duplicate")
+
+
+def _db(stats: dict) -> dict:
+    """Only the counters that exist as ingestion_runs columns (extra counters stay in workflow stats)."""
+    return {k: stats[k] for k in INGESTION_COLUMNS if k in stats}
+
+
 def collect_source(source: Source, ctx: Context, store: Store, index: DedupeIndex, categories, workflow_run_id) -> dict:
     run_id = store.start_ingestion(source.id, workflow_run_id)
     stats = {"items_fetched": 0, "items_new": 0, "items_duplicate": 0, "items_too_old": 0}
@@ -80,12 +88,12 @@ def collect_source(source: Source, ctx: Context, store: Store, index: DedupeInde
     try:
         items = registry()[source.adapter](source, ctx)
     except AdapterUnavailable as exc:
-        store.finish_ingestion(run_id, {**stats, "status": "skipped", "error": str(exc)[:500]})
+        store.finish_ingestion(run_id, {**_db(stats), "status": "skipped", "error": str(exc)[:500]})
         return {"status": "skipped", "error": str(exc), **stats}
     except Exception as exc:  # noqa: BLE001 — isolate every source
         msg = f"{type(exc).__name__}: {exc}"[:500]
         log.error("source %s failed: %s", source.id, msg)
-        store.finish_ingestion(run_id, {**stats, "status": "failed", "error": msg})
+        store.finish_ingestion(run_id, {**_db(stats), "status": "failed", "error": msg})
         return {"status": "failed", "error": msg, **stats}
 
     stats["items_fetched"] = len(items)
@@ -117,7 +125,7 @@ def collect_source(source: Source, ctx: Context, store: Store, index: DedupeInde
             errors += 1
             log.warning("item failed in %s: %s", source.id, type(exc).__name__)
     status = "partial" if errors else "success"
-    store.finish_ingestion(run_id, {**stats, "status": status, "error": f"{errors} item errors" if errors else None})
+    store.finish_ingestion(run_id, {**_db(stats), "status": status, "error": f"{errors} item errors" if errors else None})
     return {"status": status, "newest_published": newest_pub, **stats}
 
 

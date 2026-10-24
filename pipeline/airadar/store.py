@@ -255,7 +255,13 @@ class MemoryStore(Store):
     def start_ingestion(self, source_id, workflow_run_id):
         rid = str(uuid.uuid4()); self.ingestion[rid] = {"source_id": source_id, "status": "running"}; return rid
 
-    def finish_ingestion(self, run_id, fields): self.ingestion[run_id].update(fields)
+    INGESTION_COLS = {"status", "items_fetched", "items_new", "items_duplicate", "error", "finished_at"}
+
+    def finish_ingestion(self, run_id, fields):
+        unknown = set(fields) - self.INGESTION_COLS
+        if unknown:
+            raise RuntimeError(f"ingestion_runs has no column(s) {sorted(unknown)}")
+        self.ingestion[run_id].update(fields)
 
     def start_workflow(self, workflow, github_run_id, github_run_url):
         rid = str(uuid.uuid4()); self.workflows[rid] = {"workflow": workflow, "status": "running"}; return rid
