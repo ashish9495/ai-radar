@@ -22,7 +22,7 @@ jobs:
       DAILY_BUDGET_USD: ${{ vars.DAILY_BUDGET_USD }}
       LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v6
         with: { python-version: "3.12", cache: pip, cache-dependency-path: pipeline/pyproject.toml }
       - run: pip install ./pipeline

@@ -24,7 +24,7 @@ jobs:
       SEARCH_API_KEY: ${{ secrets.SEARCH_API_KEY }}
       HTTP_USER_AGENT: "AI-RADAR/1.0 (personal dashboard; https://github.com/${{ github.repository }})"
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v6
         with: { python-version: "3.12", cache: pip, cache-dependency-path: pipeline/pyproject.toml }
       - run: pip install ./pipeline
