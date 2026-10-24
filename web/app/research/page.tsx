@@ -5,7 +5,7 @@ import { Filters } from "@/components/filters";
 import { PageHeader } from "@/components/ui";
 import type { SearchParams } from "@/lib/types";
 
-const BASE: SearchParams = { types: ["model", "paper", "dataset"], sort: "discovered" };
+const BASE: SearchParams = { types: ["model", "paper", "dataset"], sort: "published" };
 
 export default function Research() {
   const [p, setP] = useState<SearchParams>(BASE);

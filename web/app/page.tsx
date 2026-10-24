@@ -3,11 +3,11 @@ import Link from "next/link";
 import { DiscoveryFeed } from "@/components/discovery";
 import { Badge, Empty, ErrorBox, FreshnessPill, Markdown, PageHeader, Section, Skeleton } from "@/components/ui";
 import { getLatestBriefing, getPipelineStatus, getSources, getTrending } from "@/lib/api";
-import { formatIST, timeAgo } from "@/lib/format";
+import { daysAgo, formatIST, timeAgo } from "@/lib/format";
 import { useAsync } from "@/lib/hooks";
 
-const DAY = () => new Date(Date.now() - 86400_000).toISOString();
-const WEEK = () => new Date(Date.now() - 7 * 86400_000).toISOString();
+// Computed once per page load (rounded to the hour) so the queries stay stable between renders.
+const D2 = daysAgo(2), D7 = daysAgo(7), D14 = daysAgo(14);
 
 export default function Overview() {
   const status = useAsync(getPipelineStatus, []);
@@ -37,24 +37,25 @@ export default function Overview() {
       <div className="grid gap-8 xl:grid-cols-[1fr_320px]">
         <div className="min-w-0">
           <Section title="Must know · last 7 days">
-            <DiscoveryFeed params={{ importance: "must_know", discoveredFrom: WEEK(), sort: "score" }} pageSize={6}
+            <DiscoveryFeed params={{ importance: "must_know", publishedFrom: D7, sort: "score" }} pageSize={6}
               empty="No Must Know items this week. That label requires a high score and reliable evidence." />
           </Section>
           <Section title="Try today" action={<Link href="/tools/" className="link text-xs">All tools →</Link>}>
-            <DiscoveryFeed params={{ importance: "worth_trying", types: ["tool", "repo", "agent", "workflow"], discoveredFrom: WEEK(), sort: "score" }}
+            <DiscoveryFeed params={{ importance: "worth_trying", types: ["tool", "repo", "agent", "workflow"], publishedFrom: D14, sort: "score" }}
               pageSize={4} compact empty="No practical, reasonably verified tools found this week yet." />
           </Section>
-          <Section title="Breaking · last 24 hours" action={<Link href="/news/" className="link text-xs">All news →</Link>}>
-            <DiscoveryFeed params={{ types: ["news", "model"], discoveredFrom: DAY(), sort: "score" }} pageSize={6} compact />
+          <Section title="Breaking · published in the last 48 hours" action={<Link href="/news/" className="link text-xs">All news →</Link>}>
+            <DiscoveryFeed params={{ types: ["news", "model"], publishedFrom: D2, sort: "published" }} pageSize={6} compact />
           </Section>
           <Section title="Recently launched tools">
-            <DiscoveryFeed params={{ types: ["tool"], sort: "discovered" }} pageSize={4} compact />
+            <DiscoveryFeed params={{ types: ["tool"], publishedFrom: D14, sort: "published" }} pageSize={4} compact
+              empty="No tool launches published in the last 14 days yet." />
           </Section>
           <Section title="Useful open-source projects" action={<Link href="/github/" className="link text-xs">More →</Link>}>
-            <DiscoveryFeed params={{ types: ["repo"], discoveredFrom: WEEK(), sort: "score" }} pageSize={4} compact />
+            <DiscoveryFeed params={{ types: ["repo"], publishedFrom: D14, sort: "published" }} pageSize={4} compact />
           </Section>
-          <Section title="Latest discoveries">
-            <DiscoveryFeed params={{ sort: "discovered" }} pageSize={6} compact />
+          <Section title="Latest · newest published first">
+            <DiscoveryFeed params={{ publishedFrom: D7, sort: "published" }} pageSize={6} compact />
           </Section>
         </div>
 

@@ -28,7 +28,8 @@ def fetch(source: Source, ctx: Context) -> list[RawItem]:
             title=f"{rid}" + (f" ({pipeline_tag})" if pipeline_tag else ""),
             url=f"https://huggingface.co/{prefix}{rid}",
             excerpt=f"{desc}. Tags: {', '.join(t for t in tags if ':' not in t)[:400]}",
-            published_at=parse_datetime(m.get("createdAt")),
+            published_at=None,  # trending now; createdAt can be years old and is not a publication date
+            released_at=parse_datetime(m.get("createdAt")),
             updated_at_source=parse_datetime(m.get("lastModified")),
             external_id=rid,
             discovery_type=TYPE_MAP.get(kind, "other"),

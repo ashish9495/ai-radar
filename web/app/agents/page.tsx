@@ -3,9 +3,10 @@ import { useState } from "react";
 import { DiscoveryFeed } from "@/components/discovery";
 import { Filters } from "@/components/filters";
 import { PageHeader } from "@/components/ui";
+import { daysAgo } from "@/lib/format";
 import type { SearchParams } from "@/lib/types";
 
-const BASE: SearchParams = { category: "agents", sort: "discovered" };
+const BASE: SearchParams = { category: "agents", sort: "published", publishedFrom: daysAgo(30) };
 
 export default function Agents() {
   const [p, setP] = useState<SearchParams>(BASE);

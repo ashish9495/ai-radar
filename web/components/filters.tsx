@@ -32,6 +32,7 @@ export function Filters({ base, fields, onChange }: { base: SearchParams; fields
     if (f.pubTo) p.publishedTo = toISO(f.pubTo, true);
     if (f.discFrom) p.discoveredFrom = toISO(f.discFrom);
     if (f.discTo) p.discoveredTo = toISO(f.discTo, true);
+    if (f.older === "yes") delete p.publishedFrom;
     if (f.sort) p.sort = f.sort as SearchParams["sort"];
     else if (dq) p.sort = "relevance";
     onChange(p);
@@ -72,7 +73,16 @@ export function Filters({ base, fields, onChange }: { base: SearchParams; fields
         {has("published") && <>{date("pubFrom", "Published from")}{date("pubTo", "Published to")}</>}
         {has("discovered") && <>{date("discFrom", "Discovered from")}{date("discTo", "Discovered to")}</>}
       </div>
-      {Object.values(f).some(Boolean) && <button className="link text-xs" onClick={() => setF({})}>Clear filters</button>}
+      <div className="flex flex-wrap items-center gap-4">
+        {base.publishedFrom && (
+          <label className="flex items-center gap-2 text-xs text-muted">
+            <input type="checkbox" className="h-4 w-4 accent-[var(--color-accent)]" checked={f.older === "yes"}
+              onChange={(e) => setF({ ...f, older: e.target.checked ? "yes" : "" })} />
+            Include older items (default: published since {new Date(base.publishedFrom).toLocaleDateString("en-IN", { day: "numeric", month: "short" })})
+          </label>
+        )}
+        {Object.values(f).some(Boolean) && <button className="link text-xs" onClick={() => setF({})}>Clear filters</button>}
+      </div>
     </div>
   );
 }

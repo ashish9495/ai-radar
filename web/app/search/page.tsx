@@ -5,7 +5,7 @@ import { Filters } from "@/components/filters";
 import { PageHeader } from "@/components/ui";
 import type { SearchParams } from "@/lib/types";
 
-const BASE: SearchParams = { sort: "discovered" };
+const BASE: SearchParams = { sort: "published" };
 
 export default function Search() {
   const [p, setP] = useState<SearchParams>(BASE);

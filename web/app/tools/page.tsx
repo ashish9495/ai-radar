@@ -3,9 +3,10 @@ import { useState } from "react";
 import { DiscoveryFeed } from "@/components/discovery";
 import { Filters } from "@/components/filters";
 import { PageHeader } from "@/components/ui";
+import { daysAgo } from "@/lib/format";
 import type { SearchParams } from "@/lib/types";
 
-const BASE: SearchParams = { types: ["tool", "agent", "repo"], sort: "score" };
+const BASE: SearchParams = { types: ["tool", "agent", "repo"], sort: "score", publishedFrom: daysAgo(30) };
 
 export default function Tools() {
   const [p, setP] = useState<SearchParams>(BASE);

@@ -68,3 +68,11 @@ describe("demo data", () => {
     expect(all[0].total_count).toBe(all.length);
   });
 });
+
+import { daysAgo } from "./format";
+describe("daysAgo", () => {
+  it("is stable within the same hour", () => {
+    expect(daysAgo(7, new Date("2026-10-24T10:05:00Z"))).toBe(daysAgo(7, new Date("2026-10-24T10:55:00Z")));
+    expect(daysAgo(1, new Date("2026-10-24T10:05:00Z"))).toBe("2026-10-23T10:00:00.000Z");
+  });
+});

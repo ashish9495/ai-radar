@@ -61,16 +61,16 @@
  },
  {
   "id": "ms-ai-blog",
-  "name": "Microsoft AI Blog",
+  "name": "Microsoft Source — AI",
   "adapter": "rss",
   "config": {
-   "url": "https://blogs.microsoft.com/ai/feed/"
+   "url": "https://news.microsoft.com/source/topics/ai/feed/"
   },
   "reliability": 5,
   "is_official": true,
   "interval_minutes": 60,
   "default_category": "daily-tools",
-  "homepage": "https://blogs.microsoft.com/ai/",
+  "homepage": "https://news.microsoft.com/source/topics/ai/",
   "notes": null,
   "enabled": true
  },
@@ -112,7 +112,8 @@
   "config": {
    "url": "https://www.microsoft.com/releasecommunications/api/v2/m365/rss",
    "max_items": 40,
-   "keyword_filter": true
+   "keyword_filter": true,
+   "max_age_days": 30
   },
   "reliability": 5,
   "is_official": true,
@@ -205,7 +206,8 @@
   "adapter": "arxiv",
   "config": {
    "query": "cat:cs.AI OR cat:cs.CL OR cat:cs.LG OR cat:cs.MA",
-   "max_results": 40
+   "max_results": 40,
+   "max_age_days": 7
   },
   "reliability": 4,
   "is_official": false,
@@ -301,7 +303,8 @@
     "crewAIInc/crewAI",
     "microsoft/autogen"
    ],
-   "per_repo": 2
+   "per_repo": 2,
+   "max_age_days": 30
   },
   "reliability": 4,
   "is_official": true,
@@ -325,7 +328,8 @@
    ],
    "created_within_days": 30,
    "min_stars": 80,
-   "per_query": 10
+   "per_query": 10,
+   "max_age_days": 30
   },
   "reliability": 2,
   "is_official": false,
@@ -342,7 +346,8 @@
   "config": {
    "kind": "models",
    "sort": "trendingScore",
-   "limit": 25
+   "limit": 25,
+   "max_age_days": 0
   },
   "reliability": 3,
   "is_official": false,

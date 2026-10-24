@@ -16,6 +16,14 @@ from .normalize import canonical_url, clean_text, content_hash, iso, normalize_t
 from .store import Store
 
 log = logging.getLogger("airadar.collect")
+DEFAULT_MAX_AGE_DAYS = 21  # feeds hand over their whole backlog; skip anything older than this
+
+
+def too_old(item: RawItem, source: Source, now: datetime) -> bool:
+    """True if the item was published longer ago than the source allows (0 disables the check).
+    Undated items are kept and shown as 'date unknown'."""
+    max_age = int(source.config.get("max_age_days", DEFAULT_MAX_AGE_DAYS))
+    return bool(max_age and item.published_at and now - item.published_at > timedelta(days=max_age))
 
 
 def is_due(source: Source, health: dict | None, now: datetime, grace_minutes: int = 5) -> bool:
@@ -67,7 +75,8 @@ def to_row(item: RawItem, source: Source) -> dict:
 
 def collect_source(source: Source, ctx: Context, store: Store, index: DedupeIndex, categories, workflow_run_id) -> dict:
     run_id = store.start_ingestion(source.id, workflow_run_id)
-    stats = {"items_fetched": 0, "items_new": 0, "items_duplicate": 0}
+    stats = {"items_fetched": 0, "items_new": 0, "items_duplicate": 0, "items_too_old": 0}
+    now = datetime.now(timezone.utc)
     try:
         items = registry()[source.adapter](source, ctx)
     except AdapterUnavailable as exc:
@@ -85,6 +94,9 @@ def collect_source(source: Source, ctx: Context, store: Store, index: DedupeInde
     for item in items:
         try:
             if source.config.get("keyword_filter") and not keyword_filter_pass(item, categories):
+                continue
+            if too_old(item, source, now):
+                stats["items_too_old"] += 1
                 continue
             row = to_row(item, source)
             if item.published_at and (newest_pub is None or item.published_at > newest_pub):
@@ -146,7 +158,7 @@ def run(store: Store, config: Config, http: Http, only: list[str] | None = None,
     ran = [v for v in summary.values() if v["status"] != "not_due"]
     failed = sum(1 for v in ran if v["status"] == "failed")
     status = "failed" if ran and failed == len(ran) else "partial" if failed else "success"
-    totals = {k: sum(v.get(k, 0) for v in ran) for k in ("items_fetched", "items_new", "items_duplicate")}
+    totals = {k: sum(v.get(k, 0) for v in ran) for k in ("items_fetched", "items_new", "items_duplicate", "items_too_old")}
     store.finish_workflow(wf, {"status": status, "stats": {"sources": summary, **totals, "config": config.status()},
                                "error": f"{failed} source(s) failed" if failed else None})
     return {"status": status, "sources": summary, **totals}
@@ -168,8 +180,8 @@ def main(argv: list[str] | None = None) -> int:
     finally:
         http.close()
     for sid, r in result["sources"].items():
-        log.info("%-20s %-8s fetched=%s new=%s dup=%s %s", sid, r["status"], r.get("items_fetched", "-"),
-                 r.get("items_new", "-"), r.get("items_duplicate", "-"), r.get("error") or "")
+        log.info("%-20s %-8s fetched=%s new=%s dup=%s too_old=%s %s", sid, r["status"], r.get("items_fetched", "-"),
+                 r.get("items_new", "-"), r.get("items_duplicate", "-"), r.get("items_too_old", "-"), r.get("error") or "")
     log.info("collect finished: %s (new=%d, duplicates=%d)", result["status"], result["items_new"], result["items_duplicate"])
     return 1 if result["status"] == "failed" else 0
 

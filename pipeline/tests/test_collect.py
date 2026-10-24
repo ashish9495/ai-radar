@@ -84,3 +84,17 @@ def test_empty_feed_is_success_with_zero_items(store, config, router, http):
     result = collect.run(store, config, http, only=["openai-news"], force=True)
     assert result["sources"]["openai-news"]["status"] == "success"
     assert result["sources"]["openai-news"]["items_fetched"] == 0
+
+
+def test_old_backlog_items_are_skipped(store, config, router, http):
+    old = b'''<?xml version="1.0"?><rss version="2.0"><channel><title>x</title>
+<item><title>An article from months ago about AI agents</title><link>https://openai.com/index/old</link><pubDate>Mon, 02 Jun 2025 10:00:00 GMT</pubDate></item>
+<item><title>Fresh article about AI agents today</title><link>https://openai.com/index/fresh</link><pubDate>''' + \
+        __import__("email.utils").utils.format_datetime(datetime.now(timezone.utc) - timedelta(hours=3)).encode() + b'''</pubDate></item>
+</channel></rss>'''
+    router.routes.insert(0, ("openai.com/news/rss.xml", 200, old, {}))
+    result = collect.run(store, config, http, only=["openai-news"], force=True)
+    titles = {d["title"] for d in store.discoveries.values()}
+    assert "Fresh article about AI agents today" in titles
+    assert "An article from months ago about AI agents" not in titles
+    assert result["items_too_old"] == 1

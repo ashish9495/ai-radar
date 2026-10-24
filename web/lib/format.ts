@@ -2,6 +2,12 @@ import type { DiscoveryType, Importance, Pricing, Verification } from "./types";
 
 const IST = "Asia/Kolkata";
 
+/** ISO timestamp n days ago, rounded down to the hour so it is stable across renders. */
+export function daysAgo(n: number, now: Date = new Date()): string {
+  const t = now.getTime() - n * 86400_000;
+  return new Date(t - (t % 3600_000)).toISOString();
+}
+
 export function formatIST(iso: string | null | undefined, withTime = true): string {
   if (!iso) return "Unknown";
   const d = new Date(iso);
