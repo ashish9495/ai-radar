@@ -26,11 +26,11 @@ def too_old(item: RawItem, source: Source, now: datetime) -> bool:
     return bool(max_age and item.published_at and now - item.published_at > timedelta(days=max_age))
 
 
-def is_due(source: Source, health: dict | None, now: datetime, grace_minutes: int = 5) -> bool:
+def is_due(source: Source, health: dict | None, now: datetime, grace_minutes: int = 3) -> bool:
     if not health or not health.get("last_attempt_at"):
         return True
     last = datetime.fromisoformat(str(health["last_attempt_at"]).replace("Z", "+00:00"))
-    return now - last >= timedelta(minutes=max(source.interval_minutes - grace_minutes, 10))
+    return now - last >= timedelta(minutes=max(source.interval_minutes - grace_minutes, 5))
 
 
 def health_status(source: Source, health: dict, now: datetime) -> str:

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { searchDiscoveries, setBookmark } from "@/lib/api";
 import { IMPORTANCE, PRICING_LABEL, TYPE_LABEL, VERIFICATION, formatIST, hostname, isOldNews, timeAgo } from "@/lib/format";
 import { useAsync } from "@/lib/hooks";
+import { useLive } from "./live";
 import type { BookmarkStatus, DiscoveryRow, SearchParams } from "@/lib/types";
 import { Badge, Empty, ErrorBox, ExtLink, Pager, Skeleton } from "./ui";
 
@@ -78,7 +79,8 @@ export function DiscoveryFeed({ params, empty, pageSize = 20, compact = false, g
   const key = JSON.stringify(params);
   const [lastKey, setLastKey] = useState(key);
   if (key !== lastKey) { setLastKey(key); setOffset(0); }
-  const { data, error, loading, reload } = useAsync(() => searchDiscoveries({ ...params, limit: pageSize, offset }), [key, offset, pageSize]);
+  const { tick } = useLive();
+  const { data, error, loading, reload } = useAsync(() => searchDiscoveries({ ...params, limit: pageSize, offset }), [key, offset, pageSize, tick]);
   if (error) return <ErrorBox error={error} onRetry={reload} />;
   if (loading && !data) return <Skeleton rows={3} />;
   if (!data?.length) return <Empty>{empty ?? "Nothing here yet. New items appear after the next collection run."}</Empty>;

@@ -2,10 +2,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
-import { getPipelineStatus } from "@/lib/api";
-import { useAsync } from "@/lib/hooks";
 import { IS_DEMO } from "@/lib/supabase";
 import { AuthProvider, sendMagicLink, signOut, useAuth } from "./auth";
+import { LiveProvider, useLive } from "./live";
 import { FreshnessPill } from "./ui";
 
 const NAV = [
@@ -68,14 +67,19 @@ function Gate({ children }: { children: ReactNode }) {
       </div>
     </main>
   );
-  return <Frame>{children}</Frame>;
+  return <LiveProvider><Frame>{children}</Frame></LiveProvider>;
 }
 
 function StatusStrip() {
-  const { data } = useAsync(getPipelineStatus, []);
+  const { status: data, lastChecked, newSince, refresh } = useLive();
   if (!data) return null;
   return (
     <div className="flex flex-wrap items-center gap-2">
+      {newSince > 0 && <span className="badge badge-sky" role="status">+{newSince} new since you opened this page</span>}
+      <button className="badge badge-muted hover:text-ink" onClick={refresh}
+        title={lastChecked ? `Auto-refreshes every minute · last checked ${lastChecked.toLocaleTimeString("en-IN")}` : ""}>
+        ↻ Auto-updating
+      </button>
       <FreshnessPill iso={data.last_collect_success} expectedMinutes={45} label="Collected" />
       {data.failing_sources > 0 && <Link href="/settings/" className="badge badge-red">{data.failing_sources} source{data.failing_sources > 1 ? "s" : ""} failing</Link>}
       {data.delayed_sources > 0 && <Link href="/settings/" className="badge badge-amber">{data.delayed_sources} delayed</Link>}

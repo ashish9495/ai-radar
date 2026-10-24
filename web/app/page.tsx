@@ -5,15 +5,17 @@ import { Badge, Empty, ErrorBox, FreshnessPill, Markdown, PageHeader, Section, S
 import { getLatestBriefing, getPipelineStatus, getSources, getTrending } from "@/lib/api";
 import { daysAgo, formatIST, timeAgo } from "@/lib/format";
 import { useAsync } from "@/lib/hooks";
+import { useLive } from "@/components/live";
 
 // Computed once per page load (rounded to the hour) so the queries stay stable between renders.
 const D2 = daysAgo(2), D7 = daysAgo(7), D14 = daysAgo(14);
 
 export default function Overview() {
-  const status = useAsync(getPipelineStatus, []);
-  const trending = useAsync(getTrending, []);
-  const briefing = useAsync(getLatestBriefing, []);
-  const sources = useAsync(getSources, []);
+  const { tick } = useLive();
+  const status = useAsync(getPipelineStatus, [tick]);
+  const trending = useAsync(getTrending, [tick]);
+  const briefing = useAsync(getLatestBriefing, [tick]);
+  const sources = useAsync(getSources, [tick]);
   const s = status.data;
   const failing = (sources.data ?? []).filter((x) => x.enabled && x.source_health && ["failing", "delayed"].includes(x.source_health.status));
 

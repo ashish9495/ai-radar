@@ -4,13 +4,12 @@ import { useAuth } from "@/components/auth";
 import { Badge, Empty, ErrorBox, ExtLink, PageHeader, Section, Skeleton } from "@/components/ui";
 import {
   getCategories, getFailedIngestion, getPipelineStatus, getSettings, getSources, getUsage, getWorkflowRuns,
-  setCategoryEnabled, setSetting, setSourceEnabled, setSourceInterval,
+  setCategoryEnabled, setSetting, setSourceEnabled,
 } from "@/lib/api";
 import { formatIST, timeAgo } from "@/lib/format";
 import { useAsync } from "@/lib/hooks";
 
 const HEALTH_CLS: Record<string, string> = { healthy: "badge-green", delayed: "badge-amber", failing: "badge-red", disabled: "badge-muted", unknown: "badge-muted" };
-const INTERVALS = [15, 30, 60, 120, 180, 360, 720, 1440];
 
 export default function Settings() {
   const auth = useAuth();
@@ -80,13 +79,7 @@ export default function Settings() {
                         {h && h.consecutive_failures > 0 && <div className="mt-1 text-xs text-muted">{h.consecutive_failures} failures in a row</div>}</td>
                       <td className="text-xs" title={formatIST(h?.last_success_at)}>{timeAgo(h?.last_success_at)}</td>
                       <td className="text-xs" title={formatIST(h?.last_item_published_at)}>{h?.last_item_published_at ? timeAgo(h.last_item_published_at) : "–"}</td>
-                      <td>
-                        <select className="input py-1 text-xs" aria-label={`Interval for ${s.name}`} value={s.interval_minutes}
-                          onChange={(e) => act(() => setSourceInterval(s.id, Number(e.target.value)), `Interval updated for ${s.name}`, sources.reload)}>
-                          {[...new Set([...INTERVALS, s.interval_minutes])].sort((a, b) => a - b).map((m) =>
-                            <option key={m} value={m}>{m < 60 ? `${m} min` : `${m / 60} h`}</option>)}
-                        </select>
-                      </td>
+                      <td className="text-xs">{s.interval_minutes < 60 ? `every ${s.interval_minutes} min` : `every ${s.interval_minutes / 60} h`}</td>
                       <td>
                         <input type="checkbox" className="h-4 w-4 accent-[var(--color-accent)]" checked={s.enabled} aria-label={`Enable ${s.name}`}
                           onChange={(e) => act(() => setSourceEnabled(s.id, e.target.checked), `${s.name} ${e.target.checked ? "enabled" : "disabled"}`, sources.reload)} />
@@ -98,7 +91,7 @@ export default function Settings() {
             </table>
           </div>
         )}
-        <p className="mt-2 text-xs text-muted">Intervals are targets: the collector runs every 30 minutes on GitHub Actions and picks up sources that are due. GitHub can delay scheduled runs, so a source is only marked delayed when it is well past its interval.</p>
+        <p className="mt-2 text-xs text-muted">The collector wakes every 5 minutes on GitHub Actions and fetches each source when its interval (set in config/sources.json) is due. GitHub can delay scheduled runs, so a source is only marked delayed when it is well past its interval.</p>
       </Section>
 
       <div className="grid gap-8 lg:grid-cols-2">

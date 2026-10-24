@@ -1,8 +1,8 @@
 name: Collect sources
-# Runs every 30 minutes; each source is only fetched when its own interval is due.
+# Runs every 5 minutes (GitHub's minimum); each source is fetched only when its own interval is due.
 # GitHub may delay or skip scheduled runs under load — the dashboard shows real data age.
 on:
-  schedule: [{ cron: "7,37 * * * *" }]
+  schedule: [{ cron: "*/5 * * * *" }]
   workflow_dispatch:
     inputs:
       force: { description: "Ignore per-source intervals", type: boolean, default: false }

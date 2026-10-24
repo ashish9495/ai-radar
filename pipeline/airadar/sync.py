@@ -1,8 +1,8 @@
 """Sync config/sources.json and config/categories.json into Supabase.
 
 New sources are inserted with their configured defaults. For existing sources, adapter settings are
-updated but the dashboard-editable fields (enabled, interval_minutes, notes / category enabled, priority)
-are preserved so changes made in Settings are not overwritten."""
+updated but the dashboard-editable fields (enabled, notes / category enabled, priority) are preserved so
+changes made in Settings are not overwritten. Fetch intervals are owned by config/sources.json."""
 from __future__ import annotations
 
 import json
@@ -14,7 +14,7 @@ from .config import Config
 
 log = logging.getLogger("airadar.sync")
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE_LOCKED = {"enabled", "interval_minutes", "notes"}
+SOURCE_LOCKED = {"enabled", "notes"}  # intervals come from config/sources.json
 CATEGORY_LOCKED = {"enabled", "priority"}
 ADAPTERS = {"rss", "github_releases", "github_search", "hackernews", "reddit", "huggingface", "arxiv", "web_search"}
 
