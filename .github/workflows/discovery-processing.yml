@@ -26,7 +26,7 @@ jobs:
       LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with: { python-version: "3.12", cache: pip, cache-dependency-path: pipeline/pyproject.toml }
       - run: pip install ./pipeline
       - working-directory: pipeline
